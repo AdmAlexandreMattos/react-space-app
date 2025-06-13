@@ -40,6 +40,11 @@ const ConteudoGaleria = styled.section`
 function App() {
   const [fotosGaleria, setFotosGaleria] = useState(fotos);
   const [fotoSelecionada, setFotoSelecionada] = useState(null);
+
+  const aoAlternarFavorito = (foto) => {
+    console.log(foto);
+  };
+
   return (
     <FundoGradiente>
       <EstilosGlobais />
@@ -54,6 +59,7 @@ function App() {
             />
             <Galeria
               aoFotoSelecionada={(foto) => setFotoSelecionada(foto)}
+              aoAlternarFavorito={aoAlternarFavorito}
               fotos={fotosGaleria}
             />
           </ConteudoGaleria>
