@@ -6,8 +6,9 @@ import Banner from "./componentes/Banner";
 import bannerBackground from "./assets/banner.png";
 import Galeria from "./componentes/Galeria";
 import fotos from "./fotos.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalZoom from "./componentes/ModalZoom";
+import Rodape from "./componentes/Banner";
 
 const FundoGradiente = styled.div`
   background: linear-gradient(
@@ -41,6 +42,19 @@ function App() {
   const [fotosGaleria, setFotosGaleria] = useState(fotos);
   const [fotoSelecionada, setFotoSelecionada] = useState(null);
 
+  const [filtro, setFiltro] = useState("");
+  const [tag, setTag] = useState(0);
+
+  useEffect(() => {
+    const fotosFiltradas = fotos.filter((foto) => {
+      const filtroPorTag = !tag || foto.tagId === tag;
+      const filtroPorTitulo =
+        !filtro || foto.titulo.toLowerCase().includes(filtro.toLowerCase());
+      return filtroPorTag && filtroPorTitulo;
+    });
+    setFotosGaleria(fotosFiltradas);
+  }, [filtro, tag]);
+
   const aoAlternarFavorito = (foto) => {
     if (foto.id === fotoSelecionada?.id) {
       setFotoSelecionada({
@@ -63,18 +77,19 @@ function App() {
     <FundoGradiente>
       <EstilosGlobais />
       <AppContainer>
-        <Cabecalho />
+        <Cabecalho filtro={filtro} setFiltro={setFiltro} />
         <MainContainer>
           <BarraLateral />
           <ConteudoGaleria>
             <Banner
               texto="A galeria mais completa de fotos do espaço!"
-              backgroundImage={bannerBackground}
+              bannerBackground={bannerBackground}
             />
             <Galeria
               aoFotoSelecionada={(foto) => setFotoSelecionada(foto)}
               aoAlternarFavorito={aoAlternarFavorito}
               fotos={fotosGaleria}
+              setTag={setTag}
             />
           </ConteudoGaleria>
         </MainContainer>
@@ -84,6 +99,7 @@ function App() {
         aoFechar={() => setFotoSelecionada(null)}
         aoAlternarFavorito={aoAlternarFavorito}
       />
+      <Rodape />
     </FundoGradiente>
   );
 }
